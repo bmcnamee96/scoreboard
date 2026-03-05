@@ -34,6 +34,8 @@ class LiveScoreService : Service() {
     running = true
     createChannel()
     startForeground(NOTIFICATION_ID, buildNotification())
+    WidgetStateStorage.save(this, state)
+    WidgetUpdater.updateAll(this, state)
     scheduleNext()
   }
 
@@ -48,6 +50,8 @@ class LiveScoreService : Service() {
     if (!running) return
     state = state.next()
     NotificationManagerCompat.from(this).notify(NOTIFICATION_ID, buildNotification())
+    WidgetStateStorage.save(this, state)
+    WidgetUpdater.updateAll(this, state)
   }
 
   private fun scheduleNext() {

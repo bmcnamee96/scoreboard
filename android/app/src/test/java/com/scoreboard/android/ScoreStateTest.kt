@@ -18,4 +18,12 @@ class ScoreStateTest {
     assertEquals(1, next.scoreA)
     assertEquals(1, next.scoreB)
   }
+
+  @Test
+  fun codecRoundTrip() {
+    val state = ScoreState("Alpha", "Bravo", 5, 3, 9)
+    val encoded = ScoreStateCodec.encode(state)
+    val decoded = ScoreStateCodec.decode(encoded)
+    assertEquals(state, decoded)
+  }
 }

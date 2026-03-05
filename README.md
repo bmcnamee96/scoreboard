@@ -101,3 +101,6 @@ Open the `android/` folder in Android Studio, let it sync Gradle, then run on a 
 
 The app has buttons to start, update, and stop a foreground service that updates an ongoing notification
 every 30 seconds. This is the baseline UX for a lock-screen live score on Android.
+
+This prototype also includes an AppWidget (Scoreboard Live) that reflects the latest score from the
+foreground service. Add the widget from the launcher widget picker.

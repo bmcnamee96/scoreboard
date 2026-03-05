@@ -8,4 +8,5 @@
   <string name="status_running">Live score running</string>
   <string name="status_updated">Updated notification</string>
   <string name="status_stopped">Stopped</string>
+  <string name="widget_name">Scoreboard Live</string>
 </resources>
