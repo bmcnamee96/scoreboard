@@ -172,6 +172,15 @@ export const getTokensForMatch = async (
   return result.rows.map((row) => row.device_token as string);
 };
 
+export const removeTokens = async (tokens: string[]): Promise<void> => {
+  if (tokens.length === 0) return;
+  await ensureSchema();
+  await getPool().query(
+    `DELETE FROM subscriptions WHERE device_token = ANY($1::text[])`,
+    [tokens]
+  );
+};
+
 type MatchRow = {
   match_id: string;
   url: string;

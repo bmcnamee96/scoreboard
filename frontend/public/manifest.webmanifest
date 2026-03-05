@@ -1,0 +1,9 @@
+{
+  "name": "Scoreboard",
+  "short_name": "Scoreboard",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#eef3fb",
+  "theme_color": "#eef3fb",
+  "gcm_sender_id": "103953800507"
+}

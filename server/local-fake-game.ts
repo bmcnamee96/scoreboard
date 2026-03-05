@@ -57,8 +57,13 @@ const runTick = async (): Promise<void> => {
   if (notifyOnUpdate) {
     const tokens = await getTokensForMatch(matchId);
     if (tokens.length > 0) {
-      await sendMatchUpdate(tokens, makeMatch(status));
-      console.log(`[fake] notified ${tokens.length} devices`);
+      const summary = await sendMatchUpdate(tokens, makeMatch(status));
+      console.log(
+        `[fake] notified ${tokens.length} devices success=${summary.successCount} failure=${summary.failureCount}`
+      );
+      if (summary.failureCount > 0) {
+        console.warn("[fake] push failures", summary.failures);
+      }
     }
   }
 

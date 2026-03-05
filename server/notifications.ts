@@ -1,5 +1,6 @@
 import admin from "firebase-admin";
 import type { Match } from "../types/index.js";
+import { removeTokens } from "./db.js";
 
 export type SendSummary = {
   successCount: number;
@@ -17,6 +18,12 @@ const getMessaging = (): admin.messaging.Messaging => {
     throw new Error("FIREBASE_SERVICE_ACCOUNT_JSON is not set");
   }
   const serviceAccount = JSON.parse(raw) as admin.ServiceAccount;
+  if (serviceAccount.private_key?.includes("\\n")) {
+    serviceAccount.private_key = serviceAccount.private_key.replace(
+      /\\n/g,
+      "\n"
+    );
+  }
 
   if (!admin.apps.length) {
     admin.initializeApp({
@@ -81,6 +88,19 @@ export const sendMatchUpdate = async (
       };
     })
     .filter((item): item is NonNullable<typeof item> => item !== null);
+
+  const invalidTokens = failures
+    .filter((failure) =>
+      ["messaging/registration-token-not-registered", "messaging/invalid-registration-token"].includes(
+        failure.code ?? ""
+      )
+    )
+    .map((failure) => deviceTokens[failure.index])
+    .filter(Boolean);
+
+  if (invalidTokens.length > 0) {
+    await removeTokens(invalidTokens);
+  }
 
   return {
     successCount: response.successCount,
