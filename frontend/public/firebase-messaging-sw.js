@@ -1,5 +1,6 @@
 self.addEventListener("push", (event) => {
-  const payload = event.data ? event.data.json() : {};
+  const raw = event.data ? event.data.json() : {};
+  const payload = raw.data ? raw.data : raw;
   const title = payload.title || "Match Update";
   const body = payload.body || "Score update available.";
   const tag = payload.tag || "scoreboard-match";

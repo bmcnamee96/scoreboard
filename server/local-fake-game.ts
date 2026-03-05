@@ -1,5 +1,6 @@
 import "dotenv/config";
-import { upsertMatches } from "./db.js";
+import { getTokensForMatch, upsertMatches } from "./db.js";
+import { sendMatchUpdate } from "./notifications.js";
 import type { Match } from "../types/index.js";
 
 const INTERVAL_MS = Number.parseInt(
@@ -13,6 +14,7 @@ const TOTAL_DURATION_MS = Number.parseInt(
 const TOTAL_TICKS = Math.ceil(TOTAL_DURATION_MS / INTERVAL_MS);
 
 const matchId = process.env.FAKE_MATCH_ID ?? "fake-live-test";
+const notifyOnUpdate = process.env.FAKE_MATCH_NOTIFY !== "false";
 const startTime = new Date().toISOString();
 
 let scoreA = 0;
@@ -52,6 +54,13 @@ const runTick = async (): Promise<void> => {
   console.log(
     `[fake] ${matchId} ${scoreA}-${scoreB} status=${status} (${tick}/${TOTAL_TICKS})`
   );
+  if (notifyOnUpdate) {
+    const tokens = await getTokensForMatch(matchId);
+    if (tokens.length > 0) {
+      await sendMatchUpdate(tokens, makeMatch(status));
+      console.log(`[fake] notified ${tokens.length} devices`);
+    }
+  }
 
   if (isLast) {
     process.exit(0);

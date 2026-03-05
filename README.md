@@ -46,6 +46,12 @@ Optional Terminal D (Fake Match Generator):
 DEV_FAKE_MATCHES=true npm run dev:fake
 ```
 
+Optional fake match overrides (set in `.env`):
+- `FAKE_MATCH_ID` (default `fake-live-test`)
+- `FAKE_MATCH_INTERVAL_MS` (default 30000)
+- `FAKE_MATCH_DURATION_MS` (default 2700000)
+- `FAKE_MATCH_NOTIFY` (default true)
+
 Open the Vite URL (usually `http://localhost:5173` or `http://localhost:5174`).
 
 ### 4) Health Check
