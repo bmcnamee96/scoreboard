@@ -34,9 +34,10 @@ This document serves as the index and backbone structure for the entire project.
 ## Code Structure
 - Frontend: All frontend code is housed under the /frontend directory. This includes all React components, pages, styles, and the Firebase service worker under /frontend/public. We maintain a consistent folder structure to keep components organized by feature or section.
 - Backend: Backend logic is implemented via Vercel serverless functions under /api (including a debug push endpoint at /api/debug/push). Shared server logic (DB, scraping, notifications, validation) lives under /server. Each API route is defined as a separate function file, making it easy to maintain and scale.
+- Android Prototype: A minimal native Android app lives under /android to validate lock-screen style ongoing notifications via a foreground service.
 - Local Dev API: A local API runner is available at /server/local-api.ts for development without Vercel routing. A local poller is available at /server/local-poller.ts for rapid polling during development. A fake match generator is available at /server/local-fake-game.ts to simulate live updates.
 - Types: Shared types are defined under /types for use by both frontend and backend.
-- Tests: Unit tests live under /tests and are executed with Vitest.
+- Tests: Unit tests live under /tests and are executed with Vitest. Android unit tests live under /android/app/src/test.
 - Config: Project-wide config lives at the repo root (package.json, tsconfig.json, tsconfig.test.json, vitest.config.ts, .env.example, .gitignore, README.md).
 
 ## TypeScript Standards

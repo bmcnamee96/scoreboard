@@ -94,3 +94,10 @@ If you later deploy:
 2. Set Root Directory to repo root (`.`).
 3. Add the environment variables above in Vercel Settings.
 4. Deploy.
+
+## Android Prototype (Lock-Screen Notification)
+An Android prototype lives under `android/` to validate an ongoing notification (ESPN-style lock screen).
+Open the `android/` folder in Android Studio, let it sync Gradle, then run on a device.
+
+The app has buttons to start, update, and stop a foreground service that updates an ongoing notification
+every 30 seconds. This is the baseline UX for a lock-screen live score on Android.
