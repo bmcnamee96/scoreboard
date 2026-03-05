@@ -85,6 +85,7 @@ Required:
 
 Optional:
 - `DEBUG_TOKEN` (shared secret for `/api/debug/push`, send as `x-debug-token`)
+- `VITE_ENABLE_DEBUG_PUSH` (set to "true" to show the Test Push button)
 
 ## Deployment (Vercel)
 This project is set up for Vercel with `/api` serverless functions.

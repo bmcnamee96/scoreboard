@@ -6,6 +6,9 @@ import MatchCard from "./components/MatchCard";
 
 const STORAGE_TOKEN = "scoreboard:deviceToken";
 const STORAGE_FOLLOWS = "scoreboard:followedMatches";
+const STORAGE_DEBUG_TOKEN = "scoreboard:debugToken";
+const DEBUG_PUSH_ENABLED =
+  import.meta.env.DEV || import.meta.env.VITE_ENABLE_DEBUG_PUSH === "true";
 
 const loadFollowed = (): Set<string> => {
   try {
@@ -29,6 +32,7 @@ export default function App(): JSX.Element {
   );
   const [followed, setFollowed] = useState<Set<string>>(() => loadFollowed());
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
+  const [debugSending, setDebugSending] = useState(false);
 
   useEffect(() => {
     saveFollowed(followed);
@@ -39,6 +43,53 @@ export default function App(): JSX.Element {
     const upcoming = matches.filter((match) => match.status !== "live");
     return [...live, ...upcoming];
   }, [matches]);
+
+  const getDebugToken = (): string | null => {
+    const cached = sessionStorage.getItem(STORAGE_DEBUG_TOKEN);
+    if (cached) return cached;
+    const entered = window.prompt("Enter debug token");
+    if (!entered) return null;
+    sessionStorage.setItem(STORAGE_DEBUG_TOKEN, entered);
+    return entered;
+  };
+
+  const sendDebugPush = useCallback(async () => {
+    if (!DEBUG_PUSH_ENABLED) return;
+    setStatusMessage(null);
+    setDebugSending(true);
+    try {
+      const token = getDebugToken();
+      if (!token) return;
+
+      const followedMatchId = [...followed][0];
+      const matchId = followedMatchId ?? sortedMatches[0]?.id ?? "fake-live-test";
+      const response = await fetch("/api/debug/push", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-debug-token": token
+        },
+        body: JSON.stringify({ matchId })
+      });
+
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        setStatusMessage(
+          `Debug push failed: ${payload?.error ?? response.status}`
+        );
+        return;
+      }
+
+      if (payload?.failureCount > 0) {
+        console.warn("Debug push failures", payload.failures);
+      }
+      setStatusMessage(
+        `Debug push sent. success=${payload?.successCount ?? 0} failure=${payload?.failureCount ?? 0}`
+      );
+    } finally {
+      setDebugSending(false);
+    }
+  }, [followed, sortedMatches]);
 
   const ensureToken = useCallback(async (): Promise<string | null> => {
     if (deviceToken) return deviceToken;
@@ -115,9 +166,21 @@ export default function App(): JSX.Element {
             notifications.
           </p>
         </div>
-        <button className="ghost" onClick={refresh} type="button">
-          Refresh
-        </button>
+        <div className="hero-actions">
+          {DEBUG_PUSH_ENABLED && (
+            <button
+              className="ghost"
+              onClick={sendDebugPush}
+              type="button"
+              disabled={debugSending}
+            >
+              {debugSending ? "Sending..." : "Send Test Push"}
+            </button>
+          )}
+          <button className="ghost" onClick={refresh} type="button">
+            Refresh
+          </button>
+        </div>
       </header>
 
       {statusMessage && <div className="status">{statusMessage}</div>}

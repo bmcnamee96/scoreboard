@@ -70,6 +70,17 @@ body {
   cursor: pointer;
 }
 
+.ghost:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
 .matches {
   display: grid;
   gap: 18px;
