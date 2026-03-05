@@ -48,6 +48,16 @@ export const sendMatchUpdate = async (
     webpush: {
       headers: {
         Urgency: "high"
+      },
+      notification: {
+        title,
+        body,
+        tag: `match-${match.id}`,
+        renotify: true,
+        requireInteraction: true
+      },
+      fcmOptions: {
+        link: "https://valorant-scoreboard.vercel.app/"
       }
     }
   });

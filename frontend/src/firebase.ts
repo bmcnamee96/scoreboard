@@ -1,6 +1,11 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics, isSupported as analyticsSupported } from "firebase/analytics";
-import { getMessaging, getToken, isSupported } from "firebase/messaging";
+import {
+  getMessaging,
+  getToken,
+  isSupported,
+  onMessage
+} from "firebase/messaging";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -13,6 +18,7 @@ const firebaseConfig = {
 };
 
 let appInitialized = false;
+let foregroundListenerInitialized = false;
 
 const initApp = async (): Promise<void> => {
   if (appInitialized) return;
@@ -42,6 +48,26 @@ export const requestFcmToken = async (): Promise<string | null> => {
     vapidKey,
     serviceWorkerRegistration: registration
   });
+
+  if (!foregroundListenerInitialized) {
+    onMessage(messaging, async (payload) => {
+      const data = payload.data ?? {};
+      if (Notification.permission !== "granted") return;
+      const title = data.title ?? "Match Update";
+      const body = data.body ?? "Score update available.";
+      const tag = data.tag ?? "scoreboard-match";
+      const url = data.url ?? "/";
+      const ready = await navigator.serviceWorker.ready;
+      await ready.showNotification(title, {
+        body,
+        tag,
+        renotify: true,
+        requireInteraction: true,
+        data: { url }
+      });
+    });
+    foregroundListenerInitialized = true;
+  }
 
   return token || null;
 };
