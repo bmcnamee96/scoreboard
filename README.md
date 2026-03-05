@@ -36,6 +36,16 @@ Terminal B (Frontend):
 npm run dev
 ```
 
+Optional Terminal C (Local Poller):
+```
+npm run dev:poll
+```
+
+Optional Terminal D (Fake Match Generator):
+```
+DEV_FAKE_MATCHES=true npm run dev:fake
+```
+
 Open the Vite URL (usually `http://localhost:5173` or `http://localhost:5174`).
 
 ### 4) Health Check

@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "vite --config frontend/vite.config.ts",
     "dev:api": "tsx server/local-api.ts",
+    "dev:poll": "tsx server/local-poller.ts",
+    "dev:fake": "tsx server/local-fake-game.ts",
     "build": "vite build --config frontend/vite.config.ts",
     "preview": "vite preview --config frontend/vite.config.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p frontend/tsconfig.json --noEmit && tsc -p tsconfig.test.json --noEmit",
