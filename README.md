@@ -83,6 +83,9 @@ Required:
 - `VITE_FIREBASE_APP_ID`
 - `VITE_FIREBASE_MEASUREMENT_ID`
 
+Optional:
+- `DEBUG_TOKEN` (shared secret for `/api/debug/push`, send as `x-debug-token`)
+
 ## Deployment (Vercel)
 This project is set up for Vercel with `/api` serverless functions.
 If you later deploy:
