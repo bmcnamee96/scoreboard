@@ -1,0 +1,35 @@
+{
+  "name": "scoreboard",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "vite --config frontend/vite.config.ts",
+    "dev:api": "tsx server/local-api.ts",
+    "build": "vite build --config frontend/vite.config.ts",
+    "preview": "vite preview --config frontend/vite.config.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p frontend/tsconfig.json --noEmit && tsc -p tsconfig.test.json --noEmit",
+    "test": "vitest run -c vitest.config.ts"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.12",
+    "dotenv": "^16.4.5",
+    "firebase": "^10.8.1",
+    "firebase-admin": "^12.0.0",
+    "pg": "^8.11.5",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.24",
+    "@types/pg": "^8.11.11",
+    "@types/react": "^18.2.64",
+    "@types/react-dom": "^18.2.21",
+    "@vercel/node": "^3.0.22",
+    "@vitejs/plugin-react": "^4.2.1",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3",
+    "vite": "^5.1.4",
+    "vitest": "^1.5.0"
+  }
+}
