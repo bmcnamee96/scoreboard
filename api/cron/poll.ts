@@ -45,7 +45,13 @@ export default async function handler(
 
     for (const match of updates) {
       const tokens = await getTokensForMatch(match.id);
-      await sendMatchUpdate(tokens, match);
+      const summary = await sendMatchUpdate(tokens, match);
+      if (summary.failureCount > 0) {
+        console.warn(
+          `[poll] match=${match.id} failures=${summary.failureCount}`,
+          summary.failures
+        );
+      }
     }
 
     res.status(200).json({ ok: true, updated: updates.length });

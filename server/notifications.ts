@@ -1,6 +1,12 @@
 import admin from "firebase-admin";
 import type { Match } from "../types/index.js";
 
+export type SendSummary = {
+  successCount: number;
+  failureCount: number;
+  failures: Array<{ index: number; code?: string; message: string }>;
+};
+
 let messaging: admin.messaging.Messaging | null = null;
 
 const getMessaging = (): admin.messaging.Messaging => {
@@ -25,8 +31,10 @@ const getMessaging = (): admin.messaging.Messaging => {
 export const sendMatchUpdate = async (
   deviceTokens: string[],
   match: Match
-): Promise<void> => {
-  if (deviceTokens.length === 0) return;
+): Promise<SendSummary> => {
+  if (deviceTokens.length === 0) {
+    return { successCount: 0, failureCount: 0, failures: [] };
+  }
 
   const title = `${match.teamA} vs ${match.teamB}`;
   const body = `${match.scoreA}-${match.scoreB} · ${match.status.toUpperCase()}`;
@@ -42,7 +50,7 @@ export const sendMatchUpdate = async (
     tag: `match-${match.id}`
   };
 
-  await getMessaging().sendEachForMulticast({
+  const response = await getMessaging().sendEachForMulticast({
     tokens: deviceTokens,
     data: dataPayload,
     webpush: {
@@ -61,4 +69,22 @@ export const sendMatchUpdate = async (
       }
     }
   });
+
+  const failures = response.responses
+    .map((item, index) => {
+      if (item.success) return null;
+      const error = item.error;
+      return {
+        index,
+        code: error?.code,
+        message: error?.message ?? "Unknown error"
+      };
+    })
+    .filter((item): item is NonNullable<typeof item> => item !== null);
+
+  return {
+    successCount: response.successCount,
+    failureCount: response.failureCount,
+    failures
+  };
 };
