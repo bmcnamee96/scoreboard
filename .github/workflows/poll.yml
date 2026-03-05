@@ -1,0 +1,18 @@
+name: Poll VLR
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+jobs:
+  poll:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call poll endpoint
+        run: |
+          if [ -z "${{ secrets.POLL_URL }}" ]; then
+            echo "POLL_URL secret is not set."
+            exit 1
+          fi
+          curl -fsS "${{ secrets.POLL_URL }}"

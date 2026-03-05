@@ -18,8 +18,5 @@
     { "src": "/api/(.*)", "dest": "/api/$1" },
     { "handle": "miss" },
     { "src": "/(.*)", "dest": "/index.html", "check": true }
-  ],
-  "crons": [
-    { "path": "/api/cron/poll", "schedule": "*/1 * * * *" }
   ]
 }
