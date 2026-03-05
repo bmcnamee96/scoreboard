@@ -37,7 +37,7 @@ This document serves as the index and backbone structure for the entire project.
 - Local Dev API: A local API runner is available at /server/local-api.ts for development without Vercel routing.
 - Types: Shared types are defined under /types for use by both frontend and backend.
 - Tests: Unit tests live under /tests and are executed with Vitest.
-- Config: Project-wide config lives at the repo root (package.json, tsconfig.json, tsconfig.test.json, vitest.config.ts, vercel.json, .env.example, .gitignore, README.md).
+- Config: Project-wide config lives at the repo root (package.json, tsconfig.json, tsconfig.test.json, vitest.config.ts, .env.example, .gitignore, README.md).
 
 ## TypeScript Standards
 - Strict Typing: We enforce strict TypeScript rules project-wide. Our tsconfig.json is set to eliminate implicit any, enforce strict null checks, and ensure all types are well-defined.
