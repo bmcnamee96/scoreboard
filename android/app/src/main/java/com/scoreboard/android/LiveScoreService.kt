@@ -10,6 +10,9 @@ import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.StyleSpan
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 
@@ -66,13 +69,27 @@ class LiveScoreService : Service() {
   }
 
   private fun buildNotification(): Notification {
+    val title = SpannableString(state.title()).apply {
+      setSpan(StyleSpan(android.graphics.Typeface.BOLD), 0, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+    }
+    val scoreLine = SpannableString("${state.scoreA}-${state.scoreB}").apply {
+      setSpan(StyleSpan(android.graphics.Typeface.BOLD), 0, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+    }
+    val roundLine = "Round ${state.round}"
+    val bigText = "${state.teamA} vs ${state.teamB}\n${state.scoreA}-${state.scoreB}\n$roundLine"
+
     return NotificationCompat.Builder(this, CHANNEL_ID)
-      .setContentTitle(state.title())
+      .setContentTitle(title)
       .setContentText(state.body())
+      .setStyle(NotificationCompat.BigTextStyle().bigText(bigText))
+      .setSubText(roundLine)
+      .setContentInfo("${state.scoreA}-${state.scoreB}")
       .setSmallIcon(android.R.drawable.ic_popup_sync)
       .setOnlyAlertOnce(true)
       .setOngoing(true)
       .setSilent(true)
+      .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+      .setPriority(NotificationCompat.PRIORITY_HIGH)
       .build()
   }
 
@@ -82,8 +99,9 @@ class LiveScoreService : Service() {
     val channel = NotificationChannel(
       CHANNEL_ID,
       "Live Score Updates",
-      NotificationManager.IMPORTANCE_LOW
+      NotificationManager.IMPORTANCE_HIGH
     )
+    channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
     manager.createNotificationChannel(channel)
   }
 
